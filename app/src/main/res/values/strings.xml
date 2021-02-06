@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Fake Desktop</string>
+    <string name="build_version_title">Build Version</string>
+</resources>
