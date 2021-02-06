@@ -17,40 +17,52 @@ import java.util.List;
 import java.util.Random;
 
 public class FakeDesktopActivity extends Activity {
-    private static int NB = 1;
     private CountDownTimer timer;
-    private View root;
     private int lastDisplayedIndex;
+    private List<AdView> adViewList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         MobileAds.initialize(this, new OnInitializationCompleteListener() {
             @Override
             public void onInitializationComplete(InitializationStatus initializationStatus) {
-                root = findViewById(android.R.id.content).getRootView();
-                List<AdView> adViewList = new ArrayList<>();
-                adViewList.add(setup(R.id.adViewTop1));
-                adViewList.add(setup(R.id.adViewTop2));
-                adViewList.add(setup(R.id.adViewTop3));
-                adViewList.add(setup(R.id.adViewMiddle1));
-                adViewList.add(setup(R.id.adViewMiddle2));
-                adViewList.add(setup(R.id.adViewMiddle3));
-                adViewList.add(setup(R.id.adViewBottom1));
-                adViewList.add(setup(R.id.adViewBottom2));
-                adViewList.add(setup(R.id.adViewBottom3));
+                View root = getRoot();
+                adViewList.add(initAd(root, R.id.adViewTop1));
+                adViewList.add(initAd(root, R.id.adViewTop2));
+                adViewList.add(initAd(root, R.id.adViewTop3));
+                adViewList.add(initAd(root, R.id.adViewMiddle1));
+                adViewList.add(initAd(root, R.id.adViewMiddle2));
+                adViewList.add(initAd(root, R.id.adViewMiddle3));
+                adViewList.add(initAd(root, R.id.adViewBottom1));
+                adViewList.add(initAd(root, R.id.adViewBottom2));
+                adViewList.add(initAd(root, R.id.adViewBottom3));
 
-                lastDisplayedIndex = adViewList.size()/2;
+                lastDisplayedIndex = adViewList.size() / 2;
+                //adViewList.get(lastDisplayedIndex).setVisibility(View.VISIBLE);
+                //adViewList.get(lastDisplayedIndex).resume();
 
                 final Random random = new Random();
                 timer = new CountDownTimer(5000, 20) {
                     @Override
                     public void onTick(long l) {
                     }
+
                     @Override
                     public void onFinish() {
+                        View root = getRoot();
+                        adViewList.clear();
+                        adViewList.add(initAd(root, R.id.adViewTop1));
+                        adViewList.add(initAd(root, R.id.adViewTop2));
+                        adViewList.add(initAd(root, R.id.adViewTop3));
+                        adViewList.add(initAd(root, R.id.adViewMiddle1));
+                        adViewList.add(initAd(root, R.id.adViewMiddle2));
+                        adViewList.add(initAd(root, R.id.adViewMiddle3));
+                        adViewList.add(initAd(root, R.id.adViewBottom1));
+                        adViewList.add(initAd(root, R.id.adViewBottom2));
+                        adViewList.add(initAd(root, R.id.adViewBottom3));
+
                         AdView randomAd = getRandomAd(adViewList);
 
                         for (AdView v : adViewList) {
@@ -60,8 +72,10 @@ public class FakeDesktopActivity extends Activity {
                             v.pause();
                             v.setVisibility(View.INVISIBLE);
                         }
-                        randomAd.resume();
-                        randomAd.setVisibility(View.VISIBLE);
+                        if (randomAd != null) {
+                            randomAd.resume();
+                            randomAd.setVisibility(View.VISIBLE);
+                        }
                         timer.start();
                     }
 
@@ -80,23 +94,33 @@ public class FakeDesktopActivity extends Activity {
                     }
                 }.start();
             }
-
-            private AdView setup(int adView) {
-                AdView mAdView1 = root.findViewById(adView);
-                AdRequest adRequest = new AdRequest.Builder().build();
-                if (!mAdView1.isActivated()) {
-                    mAdView1.loadAd(adRequest);
-                    mAdView1.pause();
-                    mAdView1.setVisibility(View.INVISIBLE);
-                }
-                return mAdView1;
-            }
         });
     }
 
-    //public void onClick(View v) {
-    //Toast.makeText(getApplicationContext(), "Gotcha #" + NB++ + "!", Toast.LENGTH_LONG).show();
-    //}
+    private View getRoot() {
+        View root = findViewById(android.R.id.content).getRootView();
+        if (root == null) {
+            root = getWindow().getDecorView().findViewById(android.R.id.content);
+        }
+        return root;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setContentView(R.layout.activity_main);
+    }
+
+    private AdView initAd(View root, int adViewId) {
+        AdView adView = root.findViewById(adViewId);
+        if (!adView.isActivated()) {
+            AdRequest adRequest = new AdRequest.Builder().build();
+            adView.loadAd(adRequest);
+            adView.pause();
+            adView.setVisibility(View.INVISIBLE);
+        }
+        return adView;
+    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
