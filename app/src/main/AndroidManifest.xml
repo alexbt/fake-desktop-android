@@ -2,21 +2,17 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.alexbt.random">
 
-    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
-    <uses-permission android:name="android.permission.USE_CREDENTIALS" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
         android:allowBackup="true"
         android:configChanges="keyboardHidden|orientation"
         android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
-        android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
-        android:supportsRtl="true">
+        android:supportsRtl="true"
+        android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen">
 
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
@@ -27,9 +23,9 @@
             android:value="true" />
 
         <activity
-            android:name="com.alexbt.random.FakeDesktopActivity"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen"
-            android:label="@string/app_name">
+            android:name="com.alexbt.random.MainActivity"
+            android:label="@string/app_name"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
